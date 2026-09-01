@@ -1,0 +1,25 @@
+{
+  "name": "engsoft_IA",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:react": "pnpm --filter react-app dev",
+    "build:react": "pnpm --filter react-app build",
+    "dev:nest": "pnpm --filter nest-app start:dev",
+    "build:nest": "pnpm --filter nest-app build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11.25.0",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "pnpm@11.25.0",
+  "type": "module"
+}
