@@ -8,58 +8,71 @@ import { SocialButton } from '../molecules/SocialButton';
 export function LoginForm() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // Login logic
   };
 
   return (
-    <div className="w-full max-w-sm mx-auto p-6 md:p-8">
-      <Typography variant="h1" className="text-center">Boas-vindas!</Typography>
-      <Typography className="text-center mb-8 text-[var(--text)]">
-        Entre na sua conta para continuar
+    <div className="w-full flex flex-col justify-center py-2">
+      <Typography variant="h1" className="mb-1 text-2xl md:text-3xl font-bold text-white text-left">
+        Login
+      </Typography>
+      <Typography className="mb-5 text-xs sm:text-sm text-gray-300 text-left font-normal">
+        Boas-vindas! Faça seu login.
       </Typography>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="w-full">
         <FormField
           id="email"
-          label="E-mail"
-          type="email"
-          placeholder="seu@email.com"
+          label="Email ou usuário"
+          type="text"
+          placeholder="usuario123"
           required
+          className="mb-4"
         />
         
-        <div className="space-y-1">
-          <FormField
-            id="password"
-            label="Senha"
-            type="password"
-            placeholder="••••••••"
-            required
-          />
-          <div className="flex justify-end">
-            <Button variant="link" type="button" className="text-sm">
-              Esqueceu a senha?
-            </Button>
-          </div>
+        <FormField
+          id="password"
+          label="Senha"
+          type="password"
+          placeholder="******"
+          required
+          className="mb-3"
+        />
+
+        <div className="flex items-center justify-between mt-2 mb-5 text-xs">
+          <label className="flex items-center gap-1.5 cursor-pointer text-gray-300 select-none">
+            <input
+              type="checkbox"
+              defaultChecked
+              className="w-3.5 h-3.5 accent-[#59F588] rounded bg-gray-700 border-0 cursor-pointer"
+            />
+            <span>Lembrar-me</span>
+          </label>
+          <a href="#forgot" className="text-gray-300 hover:text-white underline underline-offset-2">
+            Esqueci a senha
+          </a>
         </div>
 
-        <Button type="submit" className="w-full mt-4">
-          Entrar
+        <Button type="submit" className="w-full bg-[#59F588] hover:bg-[#42E86E] text-black font-bold py-2.5 rounded-lg flex items-center justify-center gap-1.5 text-sm transition-colors shadow-md">
+          <span>Login</span>
+          <span className="text-base font-bold">→</span>
         </Button>
       </form>
 
-      <Divider>ou entre com</Divider>
+      <Divider>ou entre com outras contas</Divider>
 
-      <div className="space-y-3">
-        <SocialButton provider="google">Entrar com Google</SocialButton>
-        <SocialButton provider="github">Entrar com GitHub</SocialButton>
+      <div className="flex items-center justify-center gap-6 my-2">
+        <SocialButton provider="github">Github</SocialButton>
+        <SocialButton provider="google">Gmail</SocialButton>
       </div>
 
-      <div className="mt-8 text-center text-sm text-[var(--text)]">
-        Ainda não tem uma conta?{' '}
-        <Button variant="link" className="font-semibold text-[var(--text-h)] hover:text-accent">
-          Cadastre-se
-        </Button>
+      <div className="mt-5 text-center text-xs space-y-1">
+        <p className="text-gray-300 text-xs">Ainda não tem conta?</p>
+        <a href="#register" className="inline-flex items-center justify-center gap-1.5 text-[#59F588] font-bold text-xs hover:underline mt-1">
+          <span>Crie seu cadastro!</span>
+          <span role="img" aria-label="clipboard">📋</span>
+        </a>
       </div>
     </div>
   );
 }
+

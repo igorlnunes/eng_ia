@@ -8,15 +8,15 @@ interface TypographyProps extends HTMLAttributes<HTMLElement> {
 export function Typography({ variant = 'p', children, className = '', ...props }: TypographyProps) {
   const Component = variant;
 
-  const baseStyles = 'text-[var(--text)]';
+  const baseStyles = '';
   
   const variants = {
-    h1: 'text-4xl md:text-5xl font-semibold text-[var(--text-h)] mb-6 tracking-tight',
-    h2: 'text-2xl md:text-3xl font-medium text-[var(--text-h)] mb-4',
-    h3: 'text-xl font-medium text-[var(--text-h)] mb-3',
-    p: 'text-base leading-relaxed',
-    span: '',
-    small: 'text-sm',
+    h1: 'text-2xl md:text-3xl font-semibold text-white tracking-tight text-left',
+    h2: 'text-xl font-medium text-white mb-2 text-left',
+    h3: 'text-lg font-medium text-white mb-2 text-left',
+    p: 'text-sm text-gray-300 leading-relaxed text-left',
+    span: 'text-sm text-gray-300',
+    small: 'text-xs text-gray-400',
   };
 
   const variantStyles = variants[variant];
@@ -27,3 +27,4 @@ export function Typography({ variant = 'p', children, className = '', ...props }
     </Component>
   );
 }
+

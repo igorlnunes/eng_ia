@@ -11,14 +11,15 @@ interface FormFieldProps extends InputProps {
 export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
   ({ label, errorText, id, className = '', ...props }, ref) => {
     return (
-      <div className={`space-y-2 ${className}`}>
+      <div className={`text-left ${className}`}>
         <Label htmlFor={id}>{label}</Label>
         <Input id={id} ref={ref} error={!!errorText} {...props} />
         {errorText && (
-          <p className="text-sm font-medium text-red-500">{errorText}</p>
+          <p className="text-xs font-medium text-red-400 mt-1">{errorText}</p>
         )}
       </div>
     );
   }
 );
 FormField.displayName = 'FormField';
+

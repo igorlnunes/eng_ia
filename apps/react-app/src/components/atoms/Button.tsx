@@ -6,14 +6,14 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export function Button({ variant = 'primary', children, className = '', ...props }: ButtonProps) {
-  const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-50 disabled:pointer-events-none px-4 py-2';
+  const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#59F588] disabled:opacity-50 disabled:pointer-events-none px-4 py-2 text-sm cursor-pointer';
   
   const variants = {
-    primary: 'bg-accent text-white hover:bg-accent/90 shadow-md',
-    secondary: 'bg-[var(--social-bg)] text-[var(--text-h)] hover:bg-[var(--border)] border border-[var(--border)] shadow-sm',
-    outline: 'border border-[var(--border)] text-[var(--text-h)] hover:bg-[var(--social-bg)]',
-    ghost: 'hover:bg-[var(--social-bg)] text-[var(--text-h)]',
-    link: 'underline-offset-4 hover:underline text-accent px-0 py-0 h-auto font-normal',
+    primary: 'bg-[#59F588] text-black font-bold hover:bg-[#42E86E] shadow-sm',
+    secondary: 'bg-transparent text-gray-200 hover:text-white hover:bg-white/5 border-0',
+    outline: 'border border-gray-700 text-gray-200 hover:bg-white/5',
+    ghost: 'hover:bg-white/5 text-gray-200',
+    link: 'underline-offset-4 hover:underline text-[#59F588] text-accent px-0 py-0 h-auto font-medium bg-transparent border-0',
   };
 
   const variantStyles = variants[variant] || variants.primary;
@@ -24,3 +24,5 @@ export function Button({ variant = 'primary', children, className = '', ...props
     </button>
   );
 }
+
+

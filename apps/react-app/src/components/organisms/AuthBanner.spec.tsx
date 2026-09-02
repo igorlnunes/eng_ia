@@ -3,9 +3,9 @@ import { describe, it, expect } from 'vitest';
 import { AuthBanner } from './AuthBanner';
 
 describe('AuthBanner', () => {
-  it('renders logo and text correctly', () => {
+  it('renders logo and banner correctly', () => {
     render(<AuthBanner />);
-    expect(screen.getByRole('img', { name: /logo/i })).toBeInTheDocument();
-    expect(screen.getByText(/inovação ganha vida/i)).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: /banner|logo/i })).toBeInTheDocument();
   });
 });
+

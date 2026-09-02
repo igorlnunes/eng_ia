@@ -5,7 +5,9 @@ import { LoginPage } from './LoginPage';
 describe('LoginPage', () => {
   it('renders login form and banner', () => {
     render(<LoginPage />);
-    expect(screen.getByRole('heading', { name: /boas-vindas/i })).toBeInTheDocument();
-    expect(screen.getByText(/inovação ganha vida/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /^login$/i })).toBeInTheDocument();
+    expect(screen.getByAltText(/code connect banner logo/i)).toBeInTheDocument();
   });
 });
+
+
