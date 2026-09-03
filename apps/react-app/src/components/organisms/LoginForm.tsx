@@ -50,7 +50,7 @@ export function LoginForm({ onNavigateToRegister }: LoginFormProps) {
           </a>
         </div>
 
-        <Button type="submit" className="w-full bg-[#59F588] hover:bg-[#42E86E] text-black font-bold py-2.5 rounded-lg flex items-center justify-center gap-1.5 text-sm transition-colors shadow-md">
+        <Button type="submit" className="w-full bg-brand-green hover:bg-brand-green-hover text-black font-bold py-2.5 rounded-lg flex items-center justify-center gap-1.5 text-sm transition-colors shadow-md">
           <span>Login</span>
           <span className="text-base font-bold">→</span>
         </Button>
@@ -68,7 +68,7 @@ export function LoginForm({ onNavigateToRegister }: LoginFormProps) {
         <button
           type="button"
           onClick={onNavigateToRegister}
-          className="inline-flex items-center justify-center gap-1.5 text-[#59F588] font-bold text-xs hover:underline mt-1 bg-transparent border-0 cursor-pointer"
+          className="inline-flex items-center justify-center gap-1.5 text-brand-green font-bold text-xs hover:underline mt-1 bg-transparent border-0 cursor-pointer"
         >
           <span>Crie seu cadastro!</span>
           <span role="img" aria-label="clipboard">📋</span>

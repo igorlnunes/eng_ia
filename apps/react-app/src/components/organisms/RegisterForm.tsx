@@ -58,7 +58,7 @@ export function RegisterForm({ onNavigateToLogin }: RegisterFormProps) {
 
         <Button
           type="submit"
-          className="w-full bg-[#59F588] hover:bg-[#42E86E] text-black font-bold py-2.5 rounded-lg flex items-center justify-center gap-1.5 text-sm transition-colors shadow-md"
+          className="w-full bg-brand-green hover:bg-brand-green-hover text-black font-bold py-2.5 rounded-lg flex items-center justify-center gap-1.5 text-sm transition-colors shadow-md"
         >
           <span>Cadastrar</span>
           <span className="text-base font-bold">→</span>
@@ -77,7 +77,7 @@ export function RegisterForm({ onNavigateToLogin }: RegisterFormProps) {
         <button
           type="button"
           onClick={onNavigateToLogin}
-          className="inline-flex items-center justify-center gap-1.5 text-[#59F588] font-bold text-xs hover:underline mt-1 bg-transparent border-0 cursor-pointer"
+          className="inline-flex items-center justify-center gap-1.5 text-brand-green font-bold text-xs hover:underline mt-1 bg-transparent border-0 cursor-pointer"
         >
           <span>Faça seu login!</span>
           <span>→</span>

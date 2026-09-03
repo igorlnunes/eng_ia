@@ -9,7 +9,7 @@ export function Divider({ children }: { children?: React.ReactNode }) {
         <span className="w-full border-t border-gray-700/60" />
       </div>
       <div className="relative flex justify-center text-xs">
-        <span className="bg-[#181D20] px-2 text-gray-300 font-normal">
+        <span className="bg-brand-card px-2 text-gray-300 font-normal">
           {children}
         </span>
       </div>

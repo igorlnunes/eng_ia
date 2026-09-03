@@ -18,7 +18,7 @@ describe('Button', () => {
   it('applies variant styles correctly', () => {
     render(<Button variant="link">Link Button</Button>);
     const button = screen.getByRole('button', { name: /link button/i });
-    expect(button.className).toContain('text-accent');
+    expect(button.className).toContain('text-brand-green');
     expect(button.className).toContain('hover:underline');
   });
 

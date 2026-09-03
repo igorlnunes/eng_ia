@@ -7,7 +7,7 @@ interface AuthLayoutProps {
 
 export function AuthLayout({ banner, children }: AuthLayoutProps) {
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center bg-[#0B0F14] p-4 sm:p-6 md:p-8 overflow-hidden">
+    <div className="relative flex min-h-screen w-full items-center justify-center bg-brand-bg p-4 sm:p-6 md:p-8 overflow-hidden">
       {/* Background Watermark Shapes (Top-Left and Bottom-Right) */}
       <div className="pointer-events-none absolute -top-12 -left-12 opacity-30 select-none">
         <svg width="400" height="400" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,7 +24,7 @@ export function AuthLayout({ banner, children }: AuthLayoutProps) {
       </div>
 
       {/* Main Card Container */}
-      <div className="relative z-10 flex w-full max-w-[860px] flex-col md:flex-row items-stretch rounded-[24px] bg-[#181D20] p-4 sm:p-5 md:p-6 shadow-2xl border border-[#262D34] gap-6 md:gap-8">
+      <div className="relative z-10 flex w-full max-w-[860px] flex-col md:flex-row items-stretch rounded-3xl bg-brand-card p-4 sm:p-5 md:p-6 shadow-2xl border border-brand-border gap-6 md:gap-8">
         
         {/* Left Side - Banner */}
         <div className="w-full md:w-1/2 shrink-0 flex items-stretch">

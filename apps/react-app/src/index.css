@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+@theme {
+  /* ── Paleta de cores do projeto ── */
+  --color-brand-green: #59f588;
+  --color-brand-green-hover: #42e86e;
+  --color-brand-input: #87888c;
+  --color-brand-bg: #0b0f14;
+  --color-brand-banner: #0f1417;
+  --color-brand-card: #181d20;
+  --color-brand-border: #262d34;
+  --color-brand-watermark: #253342;
+}
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
