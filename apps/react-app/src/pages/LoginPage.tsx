@@ -2,10 +2,14 @@ import { AuthBanner } from '../components/organisms/AuthBanner';
 import { LoginForm } from '../components/organisms/LoginForm';
 import { AuthLayout } from '../components/templates/AuthLayout';
 
-export function LoginPage() {
+interface LoginPageProps {
+  onNavigateToRegister?: () => void;
+}
+
+export function LoginPage({ onNavigateToRegister }: LoginPageProps) {
   return (
     <AuthLayout banner={<AuthBanner />}>
-      <LoginForm />
+      <LoginForm onNavigateToRegister={onNavigateToRegister} />
     </AuthLayout>
   );
 }

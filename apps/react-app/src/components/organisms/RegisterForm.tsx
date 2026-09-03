@@ -6,11 +6,11 @@ import { Divider } from '../molecules/Divider';
 import { FormField } from '../molecules/FormField';
 import { SocialButton } from '../molecules/SocialButton';
 
-interface LoginFormProps {
-  onNavigateToRegister?: () => void;
+interface RegisterFormProps {
+  onNavigateToLogin?: () => void;
 }
 
-export function LoginForm({ onNavigateToRegister }: LoginFormProps) {
+export function RegisterForm({ onNavigateToLogin }: RegisterFormProps) {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
   };
@@ -18,24 +18,33 @@ export function LoginForm({ onNavigateToRegister }: LoginFormProps) {
   return (
     <div className="w-full flex flex-col justify-center py-2">
       <Typography variant="h1" className="mb-1 text-2xl md:text-3xl font-bold text-white text-left">
-        Login
+        Cadastro
       </Typography>
       <Typography className="mb-5 text-xs sm:text-sm text-gray-300 text-left font-normal">
-        Boas-vindas! Faça seu login.
+        Olá! Preencha seus dados.
       </Typography>
 
       <form onSubmit={handleSubmit} className="w-full">
         <FormField
-          id="email"
-          label="Email ou usuário"
+          id="register-name"
+          label="Nome"
           type="text"
-          placeholder="usuario123"
+          placeholder="Nome completo"
           required
           className="mb-4"
         />
-        
+
         <FormField
-          id="password"
+          id="register-email"
+          label="Email"
+          type="email"
+          placeholder="Digite seu email"
+          required
+          className="mb-4"
+        />
+
+        <FormField
+          id="register-password"
           label="Senha"
           type="password"
           placeholder="******"
@@ -43,15 +52,15 @@ export function LoginForm({ onNavigateToRegister }: LoginFormProps) {
           className="mb-3"
         />
 
-        <div className="flex items-center justify-between mt-2 mb-5 text-xs">
-          <Checkbox id="login-remember" label="Lembrar-me" defaultChecked />
-          <a href="#forgot" className="text-gray-300 hover:text-white underline underline-offset-2">
-            Esqueci a senha
-          </a>
+        <div className="flex items-center mt-2 mb-5 text-xs">
+          <Checkbox id="register-remember" label="Lembrar-me" />
         </div>
 
-        <Button type="submit" className="w-full bg-[#59F588] hover:bg-[#42E86E] text-black font-bold py-2.5 rounded-lg flex items-center justify-center gap-1.5 text-sm transition-colors shadow-md">
-          <span>Login</span>
+        <Button
+          type="submit"
+          className="w-full bg-[#59F588] hover:bg-[#42E86E] text-black font-bold py-2.5 rounded-lg flex items-center justify-center gap-1.5 text-sm transition-colors shadow-md"
+        >
+          <span>Cadastrar</span>
           <span className="text-base font-bold">→</span>
         </Button>
       </form>
@@ -64,17 +73,16 @@ export function LoginForm({ onNavigateToRegister }: LoginFormProps) {
       </div>
 
       <div className="mt-5 text-center text-xs space-y-1">
-        <p className="text-gray-300 text-xs">Ainda não tem conta?</p>
+        <p className="text-gray-300 text-xs">Já tem conta?</p>
         <button
           type="button"
-          onClick={onNavigateToRegister}
+          onClick={onNavigateToLogin}
           className="inline-flex items-center justify-center gap-1.5 text-[#59F588] font-bold text-xs hover:underline mt-1 bg-transparent border-0 cursor-pointer"
         >
-          <span>Crie seu cadastro!</span>
-          <span role="img" aria-label="clipboard">📋</span>
+          <span>Faça seu login!</span>
+          <span>→</span>
         </button>
       </div>
     </div>
   );
 }
-
