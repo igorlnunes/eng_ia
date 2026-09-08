@@ -15,7 +15,7 @@ describe('A11y - AuthLayout', () => {
       <AuthLayout
         banner={
           <img
-            src="/Group 2087.png"
+            src="/Group 2087.webp"
             alt="Code Connect — Banner de autenticação"
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
@@ -39,7 +39,7 @@ describe('A11y - AuthLayout', () => {
       <AuthLayout
         banner={
           <img
-            src="/cadastro-banner.png"
+            src="/cadastro-banner.webp"
             alt="Code Connect — Banner de cadastro"
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />

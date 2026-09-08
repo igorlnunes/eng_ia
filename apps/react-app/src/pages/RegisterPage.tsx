@@ -11,7 +11,7 @@ export function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
     <AuthLayout
       banner={
         <AuthBanner
-          src="/cadastro-banner.png"
+          src="/cadastro-banner.webp"
           alt="Code Connect Cadastro Banner"
         />
       }

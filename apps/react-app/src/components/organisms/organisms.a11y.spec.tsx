@@ -17,14 +17,14 @@ import { RegisterForm } from './RegisterForm';
 describe('A11y - AuthBanner', () => {
   it('deve estar em conformidade com WCAG AA com alt text descritivo', async () => {
     const results = await renderAndRunAxe(
-      <AuthBanner src="/Group 2087.png" alt="Code Connect — Banner de autenticação com ilustração de código" />
+      <AuthBanner src="/Group 2087.webp" alt="Code Connect — Banner de autenticação com ilustração de código" />
     );
     expect(results).toHaveNoViolations();
   });
 
   it('deve estar em conformidade com WCAG AA com alt text customizado (cadastro)', async () => {
     const results = await renderAndRunAxe(
-      <AuthBanner src="/cadastro-banner.png" alt="Code Connect — Banner de cadastro" />
+      <AuthBanner src="/cadastro-banner.webp" alt="Code Connect — Banner de cadastro" />
     );
     expect(results).toHaveNoViolations();
   });

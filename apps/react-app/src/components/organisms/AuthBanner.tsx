@@ -6,7 +6,7 @@ interface AuthBannerProps {
 }
 
 export function AuthBanner({
-  src = '/Group 2087.png',
+  src = '/Group 2087.webp',
   alt = 'Code Connect Banner Logo',
 }: AuthBannerProps) {
   return (
@@ -15,7 +15,12 @@ export function AuthBanner({
         src={src}
         alt={alt}
         className="w-full h-full object-cover rounded-2xl"
+        fetchPriority="high"
+        decoding="async"
+        width={407}
+        height={628}
       />
     </div>
   );
 }
+

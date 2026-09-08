@@ -7,7 +7,7 @@ describe('AuthBanner', () => {
     render(<AuthBanner />);
     const img = screen.getByRole('img', { name: /banner|logo/i });
     expect(img).toBeInTheDocument();
-    expect(img).toHaveAttribute('src', '/Group 2087.png');
+    expect(img).toHaveAttribute('src', '/Group 2087.webp');
   });
 
   it('renders with custom src and alt when provided', () => {
