@@ -3,41 +3,48 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
-import { randomUUID } from 'crypto';
+import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
 import { UserResponseDto } from './dto/user-response.dto.js';
 import { User } from './entities/user.entity.js';
 
 @Injectable()
 export class UsersService {
-  private readonly users: User[] = [];
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    const existing = this.users.find((u) => u.email === createUserDto.email);
-    if (existing) {
-      throw new ConflictException('E-mail já cadastrado.');
-    }
-
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-    const user: User = {
-      id: randomUUID(),
-      name: createUserDto.name,
-      email: createUserDto.email,
-      password: hashedPassword,
-      createdAt: new Date(),
-    };
 
-    this.users.push(user);
-    return this.toResponseDto(user);
+    try {
+      const user = await this.prisma.user.create({
+        data: {
+          name: createUserDto.name,
+          email: createUserDto.email,
+          password: hashedPassword,
+        },
+      });
+
+      return this.toResponseDto(user);
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ConflictException('E-mail já cadastrado.');
+      }
+      throw error;
+    }
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
-    return this.users.find((u) => u.email === email);
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    return user ?? undefined;
   }
 
   async findById(id: string): Promise<UserResponseDto> {
-    const user = this.users.find((u) => u.id === id);
+    const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) {
       throw new NotFoundException('Usuário não encontrado.');
     }
