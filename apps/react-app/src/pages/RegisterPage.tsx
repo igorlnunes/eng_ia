@@ -4,9 +4,13 @@ import { AuthLayout } from '../components/templates/AuthLayout';
 
 interface RegisterPageProps {
   onNavigateToLogin?: () => void;
+  onSuccess?: () => void;
 }
 
-export function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
+export function RegisterPage({
+  onNavigateToLogin,
+  onSuccess,
+}: RegisterPageProps) {
   return (
     <AuthLayout
       banner={
@@ -16,7 +20,10 @@ export function RegisterPage({ onNavigateToLogin }: RegisterPageProps) {
         />
       }
     >
-      <RegisterForm onNavigateToLogin={onNavigateToLogin} />
+      <RegisterForm
+        onNavigateToLogin={onNavigateToLogin}
+        onSuccess={onSuccess}
+      />
     </AuthLayout>
   );
 }
