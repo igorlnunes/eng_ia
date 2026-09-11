@@ -3,7 +3,7 @@ import sys
 import asyncio
 import subprocess
 from pathlib import Path
-from google.antigravity import Agent, LocalAgentConfig, CapabilitiesConfig
+from google.antigravity import Agent, LocalAgentConfig
 
 
 def load_env_fallback():
@@ -32,34 +32,49 @@ def get_api_key() -> str:
     return api_key
 
 
-def get_diff() -> str:
+def get_diff_and_stat() -> tuple[str, str]:
     base_ref = os.environ.get("GITHUB_BASE_REF")
-    diff_commands = []
+    exclude_args = [
+        "--",
+        ".",
+        ":(exclude)pnpm-lock.yaml",
+        ":(exclude)package-lock.json",
+        ":(exclude)yarn.lock",
+        ":(exclude)*.lock",
+        ":(exclude)*.tsbuildinfo",
+        ":(exclude)dist/**",
+        ":(exclude)build/**"
+    ]
 
+    targets = []
     if base_ref:
-        diff_commands.extend([
-            ["git", "diff", f"origin/{base_ref}...HEAD"],
-            ["git", "diff", f"origin/{base_ref}"]
+        targets.extend([
+            f"origin/{base_ref}...HEAD",
+            f"origin/{base_ref}"
         ])
 
-    # Fallbacks para teste local ou quando base_ref não estiver definido
-    diff_commands.extend([
-        ["git", "diff", "main...HEAD"],
-        ["git", "diff", "main"],
-        ["git", "diff", "HEAD~1"],
-        ["git", "diff", "HEAD"]
+    targets.extend([
+        "main...HEAD",
+        "main",
+        "HEAD~1",
+        "HEAD"
     ])
 
-    for cmd in diff_commands:
+    for target in targets:
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
-            if result.stdout.strip():
-                print(f"Diff obtido com sucesso via comando: {' '.join(cmd)}")
-                return result.stdout
+            stat_cmd = ["git", "diff", "--stat", target] + exclude_args
+            stat_res = subprocess.run(stat_cmd, capture_output=True, text=True)
+            
+            diff_cmd = ["git", "diff", target] + exclude_args
+            diff_res = subprocess.run(diff_cmd, capture_output=True, text=True)
+
+            if diff_res.stdout.strip():
+                print(f"Diff obtido com sucesso em relação a: {target}")
+                return stat_res.stdout.strip(), diff_res.stdout.strip()
         except subprocess.SubprocessError:
             continue
 
-    return ""
+    return "", ""
 
 
 def get_project_guidelines() -> str:
@@ -69,7 +84,7 @@ def get_project_guidelines() -> str:
     return ""
 
 
-async def run_review(diff: str, api_key: str) -> str:
+async def run_review(stat: str, diff: str, api_key: str) -> str:
     guidelines = get_project_guidelines()
 
     system_instructions = f"""Você é um Engenheiro de Software Sênior especialista em Code Review e Tech Lead de arquitetura.
@@ -80,50 +95,66 @@ O projeto segue estritamente as diretrizes contidas no arquivo GEMINI.md abaixo:
 {guidelines}
 ---
 
-Ao revisar o diff, certifique-se de validar:
+Ao revisar o diff e os arquivos alterados, certifique-se de validar:
 1. **Frontend (apps/react-app)**:
    - Conformidade com Atomic Design (atoms, molecules, organisms, templates, pages).
-   - Uso de Tailwind CSS.
-   - **OBRIGATÓRIO**: Todo componente React novo ou alterado deve ter testes essenciais (.spec.tsx / .test.tsx).
+   - Uso de Tailwind CSS para estilização.
+   - **OBRIGATÓRIO**: Todo componente React novo ou alterado DEVE possuir um arquivo de teste (.spec.tsx ou .test.tsx) cobrindo seus casos essenciais.
 2. **Backend (apps/nest-app)**:
-   - Princípios RESTful (recursos no plural, verbos HTTP corretos, status codes adequados).
-   - Validações fortes via DTOs.
-   - Separação adequada entre Modules, Controllers e Services.
-   - Testes unitários/e2e correspondentes.
+   - Princípios RESTful (recursos no plural, verbos HTTP adequados, status codes corretos).
+   - Validações fortes com DTOs.
+   - Separação adequada entre Módulos, Controllers, Services e DTOs.
+   - Testes unitários/e2e para novas regras de negócio.
 3. **Padrões Gerais e Git**:
-   - Qualidade, segurança, ausência de 'any' sem justificativa no TypeScript, performance.
-   - Padrão de Conventional Commits.
+   - TypeScript estrito, ausência de tipagens fracas ou 'any' injustificado.
+   - Padrão de Conventional Commits (feat, fix, refactor, test, docs, etc.).
+   - Possíveis gargalos de segurança ou performance.
 
 Estruture sua resposta estritamente em Markdown no seguinte formato:
 ### 📋 Resumo das Mudanças
-(Breve síntese do que foi implementado)
+(Breve síntese do que foi implementado a partir dos arquivos alterados)
 
 ### 🌟 Pontos Positivos
-(Destaques de boas práticas encontradas)
+(Destaques de boas práticas arquiteturais e de código encontradas)
 
 ### ⚠️ Pontos de Atenção & Sugestões
 (Apontamentos técnicos específicos com nome de arquivos e linhas, se aplicável, sugerindo melhorias)
 
 ### 🧪 Verificação de Testes & Cobertura
-(Avaliação sobre a presença e cobertura dos testes obrigatórios)
+(Avaliação detalhada: se novos componentes React possuem os testes obrigatórios e se o backend possui testes)
 
 ### 🎯 Veredito
 (Recomendação: **Aprovado**, **Aprovado com Ressalvas** ou **Requer Alterações**)
 """
 
+    model_name = os.environ.get("ANTIGRAVITY_MODEL", "gemini-2.5-flash")
+    print(f"Utilizando modelo: {model_name}")
+
     config = LocalAgentConfig(
         system_instructions=system_instructions,
         api_key=api_key,
-        capabilities=CapabilitiesConfig()  # Modo somente leitura
+        model=model_name,
+        tools=[]  # Modo puramente analítico (sem execução de ferramentas de shell)
     )
 
-    # Limita o diff caso seja excessivamente grande para evitar estourar limites
-    max_diff_len = 40000
+    # Limita o diff caso seja muito extenso para caber no contexto com margem
+    max_diff_len = 30000
     trimmed_diff = diff[:max_diff_len]
     if len(diff) > max_diff_len:
-        trimmed_diff += f"\n\n[... Diff truncado em {max_diff_len} caracteres ...]"
+        trimmed_diff += f"\n\n[... Diff truncado em {max_diff_len} caracteres de {len(diff)} totais ...]"
 
-    prompt = f"Por favor, revise o seguinte diff de Pull Request:\n\n```diff\n{trimmed_diff}\n```"
+    prompt = f"""Por favor, revise o seguinte Pull Request:
+
+### 📁 Arquivos Alterados (git diff --stat):
+```text
+{stat}
+```
+
+### 🔍 Diff de Alterações:
+```diff
+{trimmed_diff}
+```
+"""
 
     review_chunks = []
     print("Iniciando sessão do Antigravity Agent para Code Review...")
@@ -140,25 +171,25 @@ Estruture sua resposta estritamente em Markdown no seguinte formato:
 
 async def main():
     api_key = get_api_key()
-    diff = get_diff()
+    stat, diff = get_diff_and_stat()
 
     output_path = Path("pr_review_output.md")
 
     if not diff.strip():
         message = (
             "## 🤖 Antigravity AI Code Review\n\n"
-            "Nenhuma alteração de código (diff) detectada para análise neste Pull Request."
+            "Nenhuma alteração de código detectada para análise neste Pull Request."
         )
         print(message)
         output_path.write_text(message, encoding="utf-8")
         return
 
     print(f"Tamanho do diff detectado: {len(diff)} caracteres.")
-    review_markdown = await run_review(diff, api_key)
+    review_markdown = await run_review(stat, diff, api_key)
 
-    full_output = f"## 🤖 Antigravity AI Code Review\n\n{review_markdown}\n\n---\n*Revisão automatizada via Antigravity Agent no GitHub Actions.*"
+    full_output = f"## 🤖 Antigravity AI Code Review\n\n{review_markdown}\n\n---\n*Revisão automatizada com Antigravity Agent no GitHub Actions.*"
     output_path.write_text(full_output, encoding="utf-8")
-    print(f"Comentário de revisão salvo em: {output_path.resolve()}")
+    print(f"\nComentário de revisão salvo em: {output_path.resolve()}")
 
 
 if __name__ == "__main__":
