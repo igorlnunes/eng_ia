@@ -1,6 +1,29 @@
 import { type ReactNode, type MouseEvent } from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '../../utils/cn';
 
-export interface IconButtonProps {
+const iconButtonVariants = cva(
+  'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all',
+  {
+    variants: {
+      active: {
+        true: 'text-brand-green font-semibold',
+        false: 'text-gray-400 hover:text-gray-200',
+      },
+      disabled: {
+        true: 'opacity-50 cursor-not-allowed text-gray-500',
+        false: 'cursor-pointer hover:bg-white/5 active:scale-95',
+      },
+    },
+    defaultVariants: {
+      active: false,
+      disabled: false,
+    },
+  }
+);
+
+export interface IconButtonProps
+  extends Omit<VariantProps<typeof iconButtonVariants>, 'active' | 'disabled'> {
   icon: ReactNode;
   count?: number | string;
   active?: boolean;
@@ -19,7 +42,7 @@ export function IconButton({
   title,
   ariaLabel,
   onClick,
-  className = '',
+  className,
 }: IconButtonProps) {
   return (
     <button
@@ -28,15 +51,7 @@ export function IconButton({
       aria-label={ariaLabel}
       disabled={disabled}
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
-        disabled
-          ? 'opacity-50 cursor-not-allowed text-gray-500'
-          : 'cursor-pointer hover:bg-white/5 active:scale-95'
-      } ${
-        active
-          ? 'text-brand-green font-semibold'
-          : 'text-gray-400 hover:text-gray-200'
-      } ${className}`}
+      className={cn(iconButtonVariants({ active, disabled }), className)}
     >
       <span className="w-4 h-4 flex items-center justify-center shrink-0">
         {icon}

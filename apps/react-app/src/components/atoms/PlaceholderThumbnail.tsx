@@ -1,18 +1,25 @@
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '../../utils/cn';
 
-export interface PlaceholderThumbnailProps {
+const placeholderThumbnailVariants = cva(
+  'relative w-full h-full min-h-48 overflow-hidden rounded-xl flex flex-col items-center justify-center bg-gradient-to-br from-[#182026] via-[#101418] to-[#0a0d10] border border-brand-border p-6 select-none'
+);
+
+export interface PlaceholderThumbnailProps
+  extends VariantProps<typeof placeholderThumbnailVariants> {
   title?: string;
   className?: string;
 }
 
 export function PlaceholderThumbnail({
   title = 'CodeConnect Post',
-  className = '',
+  className,
 }: PlaceholderThumbnailProps) {
   return (
     <div
       role="img"
       aria-label={`Placeholder para: ${title}`}
-      className={`relative w-full h-full min-h-48 overflow-hidden rounded-xl flex flex-col items-center justify-center bg-gradient-to-br from-[#182026] via-[#101418] to-[#0a0d10] border border-brand-border p-6 select-none ${className}`}
+      className={cn(placeholderThumbnailVariants(), className)}
     >
       {/* Decorative background grid elements */}
       <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#59f588_1px,transparent_1px)] [background-size:16px_16px]" />
