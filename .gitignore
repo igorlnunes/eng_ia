@@ -9,3 +9,4 @@ pnpm-debug.log*
 .pnpm-store/
 assets/
 plans/
+improvements.md
