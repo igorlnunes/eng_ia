@@ -3,6 +3,7 @@ import sys
 import asyncio
 import subprocess
 from pathlib import Path
+# pyrefly: ignore [missing-import]
 from google.antigravity import Agent, LocalAgentConfig
 
 
