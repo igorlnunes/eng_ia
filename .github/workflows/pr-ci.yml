@@ -36,7 +36,10 @@ jobs:
           pnpm --filter react-app build
 
       - name: Lint, Test & Build Nest App
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/nest_db?schema=public"
         run: |
+          pnpm --filter nest-app prisma:generate
           pnpm --filter nest-app lint
           pnpm --filter nest-app test
           pnpm --filter nest-app build
