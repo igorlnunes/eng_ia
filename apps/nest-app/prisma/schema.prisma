@@ -11,11 +11,65 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid()) @db.Uuid
+  id        String    @id @default(uuid()) @db.Uuid
   name      String
-  email     String   @unique
+  email     String    @unique
   password  String
-  createdAt DateTime @default(now()) @map("created_at")
+  posts     Post[]
+  comments  Comment[]
+  likes     Like[]
+  createdAt DateTime  @default(now()) @map("created_at")
 
   @@map("users")
+}
+
+model Post {
+  id          String    @id @default(uuid()) @db.Uuid
+  title       String
+  description String
+  codeSnippet String?   @map("code_snippet")
+  imageUrl    String?   @map("image_url")
+  sharesCount Int       @default(0) @map("shares_count")
+  authorId    String    @db.Uuid @map("author_id")
+  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  tags        Tag[]     @relation("PostTags")
+  comments    Comment[]
+  likes       Like[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("posts")
+}
+
+model Tag {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @unique
+  posts     Post[]   @relation("PostTags")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("tags")
+}
+
+model Comment {
+  id        String   @id @default(uuid()) @db.Uuid
+  content   String
+  postId    String   @db.Uuid @map("post_id")
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorId  String   @db.Uuid @map("author_id")
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("comments")
+}
+
+model Like {
+  id        String   @id @default(uuid()) @db.Uuid
+  postId    String   @db.Uuid @map("post_id")
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String   @db.Uuid @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([postId, userId])
+  @@map("likes")
 }

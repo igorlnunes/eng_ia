@@ -6,6 +6,8 @@ import { AuthGuard } from './auth.guard.js';
 import { AuthService } from './auth.service.js';
 import { JWT_EXPIRES_IN, JWT_SECRET } from './constants.js';
 
+import { OptionalAuthGuard } from './optional-auth.guard.js';
+
 @Module({
   imports: [
     UsersModule,
@@ -16,6 +18,7 @@ import { JWT_EXPIRES_IN, JWT_SECRET } from './constants.js';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, AuthGuard],
+  providers: [AuthService, AuthGuard, OptionalAuthGuard],
+  exports: [AuthGuard, OptionalAuthGuard],
 })
 export class AuthModule {}

@@ -1,0 +1,82 @@
+name: Pull Request CI & Antigravity Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    name: Build, Lint & Test (Monorepo)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.25.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint & Build React App
+        run: |
+          pnpm --filter react-app lint
+          pnpm --filter react-app build
+
+      - name: Lint, Test & Build Nest App
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/nest_db?schema=public"
+        run: |
+          pnpm --filter nest-app prisma:generate
+          pnpm --filter nest-app lint
+          pnpm --filter nest-app test
+          pnpm --filter nest-app build
+
+  antigravity-review:
+    name: Antigravity Code Review
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Antigravity SDK
+        run: |
+          python -m pip install --upgrade pip
+          pip install google-antigravity
+
+      - name: Run Antigravity Reviewer
+        env:
+          GEMINI_ACTIONS_API_KEY: ${{ secrets.GEMINI_ACTIONS_API_KEY }}
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+        run: |
+          python3 .github/scripts/pr_review.py
+
+      - name: Post Review Comment to PR
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if [ -f "pr_review_output.md" ]; then
+            gh pr comment "$PR_NUMBER" --body-file pr_review_output.md
+          fi

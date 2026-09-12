@@ -9,3 +9,5 @@ pnpm-debug.log*
 .pnpm-store/
 assets/
 plans/
+improvements.md
+pr_review_output.md
